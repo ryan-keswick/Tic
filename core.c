@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 void *go(int i, char *board);
+int check_input(int num, char *board);
 int check_draw(char *board);
 int check_board(char *board);
 void draw_board(char *board);
@@ -28,6 +29,11 @@ int main (void) {
         draw_board(board);
         prompt();
         scanf("%d", &num);
+        if (!check_input(num, board)) {
+            system("clear");
+            printf("Invalid\n");
+            continue;
+        }
         board[num - 1] = i;
         system("clear");
         bot(board, i); 
@@ -43,6 +49,14 @@ void menu()
     printf("2 : Play with O\n");
     printf("3 : Exit\n");
     printf("Enter your choice: \n");
+}
+
+int check_input(int num, char *board) 
+{
+    if (num < 0) return 0;
+    if (num > 10) return 0;
+    if (board[num - 1] != ' ') return 0;
+    return 1;
 }
 
 void *go(int i, char *board) 
