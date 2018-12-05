@@ -1,25 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char *go();
-void start_game();
-void check_draw();
-void draw_board(int *board);
-void player_first();
+void *go(int i, char *board);
+int check_draw(char *board);
+int check_board(char *board);
+void draw_board(char *board);
 void menu();
+void bot(char *board, int i);
+ 
+void prompt();
 
 int main (void) {
     menu(); 
     int i = 0;
-    scanf("%d", &i);
-    int *board = NULL;
+    scanf("%d", &i); 
+    char *board = malloc(40);
     if (0 < i && i < 3) { 
-        *board = go(i);
+        go(i, board);
     } else { 
         printf("Exiting..\n"); 
         return 0; 
+    } 
+    if (i == 1) i = 'X';
+    if (i == 2) i = 'O';
+    int num = 0;
+    while(!check_board(board) && !check_draw(board)) {
+        draw_board(board);
+        prompt();
+        scanf("%d", &num);
+        board[num - 1] = i;
+        system("clear");
+        bot(board, i); 
     }
-    draw_board(board);
+    free(board);
     return 0;
 }
 
@@ -32,42 +45,57 @@ void menu()
     printf("Enter your choice: \n");
 }
 
-char *go() 
+void *go(int i, char *board) 
 {
-    int *board = malloc(40);
     for (int i = 0; i < 9; i++) {
         board[i] = ' ';
     }
-    return board;
 }
 
-void start_game() 
+void bot(char *board, int i)
 {
+    if (i == 'X') i = 'O';
+    else if (i == 'O') i = 'X';
+    for(int j = 0; j < 9; j++) {
+        if (board[j] == ' ') {
+            board[j] = i;
+            return;
+        }
+    }
 }
 
-void check_draw()
+void prompt()
 {
+    printf("Enter a number 1..9\n");
 }
 
-void draw_board(int *board) 
+int check_draw(char *board)
+{
+    for(int i = 0; i < 9; i++) {
+        if (board[i] == ' ') return 0;
+    }
+    return 1;
+}
+
+int check_board(char *board)
+{
+    return 0;
+}
+void draw_board(char *board) 
 {
     if (board == NULL) {
         printf("Error board == NULL\n");
         return;
     }
     printf("    |     |     \n");
-    printf("%c  | %c  | %c  \n", board[0], board[1], board[2]);
+    printf(" %c  |  %c  | %c  \n", board[0], board[1], board[2]);
     printf("    |     |     \n");
     printf("----------------\n");
     printf("    |     |     \n");
-    printf("%c  | %c  | %c  \n", board[3], board[4], board[5]);
+    printf(" %c  |  %c  |  %c  \n", board[3], board[4], board[5]);
     printf("    |     |     \n");
     printf("----------------\n");
     printf("    |     |     \n");
-    printf("%c  | %c  | %c  \n", board[6], board[7], board[8]);
+    printf(" %c  |  %c  |  %c  \n", board[6], board[7], board[8]);
     printf("    |     |     \n"); 
-}
-
-void player_first()
-{
 }
