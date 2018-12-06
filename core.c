@@ -12,6 +12,7 @@ void bot(char *board, int i);
 void prompt();
 
 int main (void) {
+    system("clear");
     menu(); 
     int i = 0;
     scanf("%d", &i); 
@@ -24,6 +25,8 @@ int main (void) {
     } 
     if (i == 1) i = 'X';
     if (i == 2) i = 'O';
+    int winner = 0;
+    // 2 for bot
     int num = 0;
     while(!check_board(board) && !check_draw(board)) {
         draw_board(board);
@@ -35,9 +38,14 @@ int main (void) {
             continue;
         }
         board[num - 1] = i;
+        // Checks if the player is a winner
+        if (check_board(board)) { winner = 2; break; }
         system("clear");
         bot(board, i); 
     }
+    if (winner == 2) printf("Your a Winner!!!\n");
+    else printf("You LOSE!\n");
+    draw_board(board);
     free(board);
     return 0;
 }
@@ -93,6 +101,18 @@ int check_draw(char *board)
 
 int check_board(char *board)
 {
+    // Theres only 8 win cond
+    // Rows
+    if (board[0] == board[1] && board[1] == board[2] && board[0] != ' ') return 1;
+    if (board[3] == board[4] && board[4] == board[5] && board[3] != ' ') return 1;
+    if (board[6] == board[7] && board[7] == board[8] && board[6] != ' ') return 1;
+    // Cols
+    if (board[0] == board[3] && board[3] == board[6] && board[0] != ' ') return 1;
+    if (board[1] == board[4] && board[4] == board[7] && board[1] != ' ') return 1;
+    if (board[2] == board[5] && board[5] == board[8] && board[2] != ' ') return 1;
+    // Diagonals
+    if (board[0] == board[4] && board[4] == board[8] && board[0] != ' ') return 1;
+    if (board[2] == board[4] && board[4] == board[0] && board[2] != ' ') return 1;
     return 0;
 }
 void draw_board(char *board) 
